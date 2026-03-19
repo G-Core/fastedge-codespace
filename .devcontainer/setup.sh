@@ -18,23 +18,23 @@ FASTEDGE_VSIX_VERSION="0.1.24"
 FASTEDGE_VSIX_NAME="fastedge-linux-x64-${FASTEDGE_VSIX_VERSION}.vsix"
 FASTEDGE_VSIX_URL="https://github.com/godronus/FastEdge-vscode/releases/download/v${FASTEDGE_VSIX_VERSION}/${FASTEDGE_VSIX_NAME}"
 FASTEDGE_VSIX_SHA256_URL="${FASTEDGE_VSIX_URL}.sha256"
-FASTEDGE_VSIX_PATH="/tmp/${FASTEDGE_VSIX_NAME}"
+FASTEDGE_VSIX_CACHE_DIR="/usr/local/share/fastedge-extension"
+FASTEDGE_VSIX_PATH="${FASTEDGE_VSIX_CACHE_DIR}/${FASTEDGE_VSIX_NAME}"
 
-echo "📦 Downloading FastEdge VSCode extension v${FASTEDGE_VSIX_VERSION}..."
+echo "📦 Downloading FastEdge VSCode extension v${FASTEDGE_VSIX_VERSION} (cached for install on attach)..."
+mkdir -p "$FASTEDGE_VSIX_CACHE_DIR"
 curl -fsSL "$FASTEDGE_VSIX_URL" -o "$FASTEDGE_VSIX_PATH"
 curl -fsSL "$FASTEDGE_VSIX_SHA256_URL" -o "${FASTEDGE_VSIX_PATH}.sha256"
 
 echo "🔒 Verifying checksum..."
-EXPECTED=$(cat "${FASTEDGE_VSIX_PATH}.sha256" | awk '{print $1}')
+EXPECTED=$(awk '{print $1}' "${FASTEDGE_VSIX_PATH}.sha256")
 ACTUAL=$(sha256sum "$FASTEDGE_VSIX_PATH" | awk '{print $1}')
 if [ "$EXPECTED" != "$ACTUAL" ]; then
-    echo "❌ Checksum mismatch for FastEdge VSIX — aborting extension install"
+    echo "❌ Checksum mismatch for FastEdge VSIX — removing cached file"
+    rm -f "$FASTEDGE_VSIX_PATH" "${FASTEDGE_VSIX_PATH}.sha256"
 else
-    echo "✅ Checksum verified"
-    code --install-extension "$FASTEDGE_VSIX_PATH" --force
-    echo "✅ FastEdge extension installed from VSIX"
+    echo "✅ FastEdge VSIX cached at ${FASTEDGE_VSIX_PATH} (will install on first attach)"
 fi
-rm -f "$FASTEDGE_VSIX_PATH" "${FASTEDGE_VSIX_PATH}.sha256"
 
 
 # Pre-pull MCP server Docker image for caching in prebuild
