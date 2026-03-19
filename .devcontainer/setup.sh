@@ -25,8 +25,8 @@ curl -fsSL "$FASTEDGE_VSIX_URL" -o "$FASTEDGE_VSIX_PATH"
 curl -fsSL "$FASTEDGE_VSIX_SHA256_URL" -o "${FASTEDGE_VSIX_PATH}.sha256"
 
 echo "🔒 Verifying checksum..."
-EXPECTED=$(cat "${FASTEDGE_VSIX_PATH}.sha256" | awk '{print $1}')
-ACTUAL=$(sha256sum "$FASTEDGE_VSIX_PATH" | awk '{print $1}')
+read -r EXPECTED _ < "${FASTEDGE_VSIX_PATH}.sha256"
+ACTUAL=$(sha256sum "$FASTEDGE_VSIX_PATH"); ACTUAL=${ACTUAL%% *}
 if [ "$EXPECTED" != "$ACTUAL" ]; then
     echo "❌ Checksum mismatch for FastEdge VSIX — aborting extension install"
 else
