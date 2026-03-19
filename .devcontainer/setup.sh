@@ -27,8 +27,8 @@ curl -fsSL "$FASTEDGE_VSIX_URL" -o "$FASTEDGE_VSIX_PATH"
 curl -fsSL "$FASTEDGE_VSIX_SHA256_URL" -o "${FASTEDGE_VSIX_PATH}.sha256"
 
 echo "🔒 Verifying checksum..."
-EXPECTED=$(awk '{print $1}' "${FASTEDGE_VSIX_PATH}.sha256")
-ACTUAL=$(sha256sum "$FASTEDGE_VSIX_PATH" | awk '{print $1}')
+read -r EXPECTED _ < "${FASTEDGE_VSIX_PATH}.sha256"
+ACTUAL=$(sha256sum "$FASTEDGE_VSIX_PATH"); ACTUAL=${ACTUAL%% *}
 if [ "$EXPECTED" != "$ACTUAL" ]; then
     echo "❌ Checksum mismatch for FastEdge VSIX — removing cached file"
     rm -f "$FASTEDGE_VSIX_PATH" "${FASTEDGE_VSIX_PATH}.sha256"
