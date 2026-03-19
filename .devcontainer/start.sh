@@ -2,7 +2,7 @@
 # Interactive template selector for FastEdge Apps
 
 # Install cached FastEdge VSIX extension (code CLI is only available on attach, not during prebuild)
-FASTEDGE_VSIX_PATH=$(ls /usr/local/share/fastedge-extension/fastedge-linux-x64-*.vsix 2>/dev/null | head -1)
+FASTEDGE_VSIX_PATH=$(ls "$HOME/.fastedge-extension/fastedge-linux-x64-"*.vsix 2>/dev/null | head -1)
 if [ -n "$FASTEDGE_VSIX_PATH" ] && [ ! -f "$HOME/.fastedge-extension-installed" ]; then
     echo "📦 Installing FastEdge VSCode extension from VSIX..."
     if code --install-extension "$FASTEDGE_VSIX_PATH" --force; then
