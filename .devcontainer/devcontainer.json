@@ -36,8 +36,7 @@
         "rust-lang.rust-analyzer",
         "tamasfe.even-better-toml",
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "g-corelabssa.fastedge"
+        "esbenp.prettier-vscode"
       ],
       "settings": {
         // "chat.editor.location": "sidebar",
