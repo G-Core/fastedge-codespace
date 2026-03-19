@@ -37,6 +37,7 @@
         "tamasfe.even-better-toml",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode"
+        // "g-corelabssa.fastedge"
       ],
       "settings": {
         // "chat.editor.location": "sidebar",
