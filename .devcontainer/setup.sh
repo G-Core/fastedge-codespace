@@ -18,7 +18,7 @@ FASTEDGE_VSIX_VERSION="0.1.24"
 FASTEDGE_VSIX_NAME="fastedge-linux-x64-${FASTEDGE_VSIX_VERSION}.vsix"
 FASTEDGE_VSIX_URL="https://github.com/godronus/FastEdge-vscode/releases/download/v${FASTEDGE_VSIX_VERSION}/${FASTEDGE_VSIX_NAME}"
 FASTEDGE_VSIX_SHA256_URL="${FASTEDGE_VSIX_URL}.sha256"
-FASTEDGE_VSIX_CACHE_DIR="/usr/local/share/fastedge-extension"
+FASTEDGE_VSIX_CACHE_DIR="$HOME/.fastedge-extension"
 FASTEDGE_VSIX_PATH="${FASTEDGE_VSIX_CACHE_DIR}/${FASTEDGE_VSIX_NAME}"
 
 echo "📦 Downloading FastEdge VSCode extension v${FASTEDGE_VSIX_VERSION} (cached for install on attach)..."
