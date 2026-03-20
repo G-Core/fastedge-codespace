@@ -14,7 +14,7 @@ echo "🚀 Setting up FastEdge development environment..."
 ## ADD ALL ONE TIME SETUP STEPS BELOW THIS LINE ##
 
 # Install FastEdge VSCode extension from VSIX (newer than marketplace version)
-FASTEDGE_VSIX_VERSION="0.1.24"
+FASTEDGE_VSIX_VERSION="0.1.25"
 FASTEDGE_VSIX_NAME="fastedge-linux-x64-${FASTEDGE_VSIX_VERSION}.vsix"
 FASTEDGE_VSIX_URL="https://github.com/godronus/FastEdge-vscode/releases/download/v${FASTEDGE_VSIX_VERSION}/${FASTEDGE_VSIX_NAME}"
 FASTEDGE_VSIX_SHA256_URL="${FASTEDGE_VSIX_URL}.sha256"
