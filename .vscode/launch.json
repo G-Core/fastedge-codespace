@@ -3,16 +3,8 @@
   "configurations": [
     {
       "type": "fastedge",
-      "name": "FastEdge App",
       "request": "launch",
-      "port": 8181,
-      "dotenv": false,
-      "env": {},
-      "secrets": {},
-      "headers": {},
-      "geoIpHeaders": false,
-      "responseHeaders": {},
-      "traceLogging": false
+      "name": "FastEdge App"
     }
   ]
 }
