@@ -10,6 +10,13 @@ The "startup" script will start shortly and help you get started coding your fir
 
 There is also an MCP Server attached [fastedge-assistant](https://github.com/G-Core/FastEdge-mcp-server) that helps you develop (vibe-code) applications and deploy them to our network.
 
+## Signing in
+
+The MCP server doesn't need an API key. When it first needs your Gcore account, Copilot gives you a portal link and a `login --code` command. Open the link in your browser, choose the manual option and approve, then run the command in the terminal and paste the connect code at its prompt.
+
+- Never paste the connect code into the chat: it is your access token.
+- The session lasts at most 8 hours and is kept only in the running MCP server's memory. Nothing usable is saved in this codespace, so you approve again each time the MCP server restarts.
+
 ## Next Steps
 
 To help you write code that matches the FastEdge API please use our MCP Server, it contains all of our examples and SDK knowledge within it's context.

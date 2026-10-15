@@ -58,12 +58,6 @@
     }
   },
 
-  "secrets": {
-    "GCORE_API_TOKEN": {
-      "description": "Enter your GCore API key for MCP server access"
-    }
-  },
-
   "remoteUser": "vscode",
   "forwardPorts": [8181]
 }

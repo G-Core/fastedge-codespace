@@ -2,15 +2,23 @@
   "servers": {
     "fastedge-assistant": {
       "type": "stdio",
-      "command": "bash",
+      "command": "docker",
       "args": [
-        "-c",
-        "docker run --rm -i -v ${workspaceFolder}:/workspace -e WORKSPACE_ROOT=/workspace -e FASTEDGE_API_KEY=$FASTEDGE_API_KEY -e FASTEDGE_API_URL=$FASTEDGE_API_URL ghcr.io/g-core/fastedge-mcp-server:latest"
-      ],
-      "env": {
-        "FASTEDGE_API_KEY": "${env:GCORE_API_TOKEN}",
-        "FASTEDGE_API_URL": "https://api.preprod.world"
-      }
+        "run",
+        "--rm",
+        "-i",
+        "-v",
+        "${workspaceFolder}:/workspace",
+        "-v",
+        "fastedge-session:/run/fastedge:ro",
+        "-e",
+        "WORKSPACE_ROOT=/workspace",
+        "-e",
+        "FASTEDGE_SESSION=ephemeral",
+        "-e",
+        "GCORE_API_BASE=https://api.preprod.world",
+        "ghcr.io/g-core/fastedge-mcp-server:latest"
+      ]
     }
   }
 }
