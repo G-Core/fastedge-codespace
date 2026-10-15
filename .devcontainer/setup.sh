@@ -16,7 +16,7 @@ echo "🚀 Setting up FastEdge development environment..."
 
 # Pre-pull MCP server Docker image for caching in prebuild
 echo "📦 Pulling FastEdge MCP server image..."
-if docker pull ghcr.io/g-core/fastedge-mcp-server:0.3.1; then
+if docker pull ghcr.io/g-core/fastedge-mcp-server:latest; then
     echo "✅ MCP server image cached successfully"
 else
     echo "⚠️  Failed to pull MCP server image (may succeed on container start)"
