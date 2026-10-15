@@ -17,82 +17,31 @@ echo "║   FastEdge Application Codespace Created   ║"
 echo "╚════════════════════════════════════════════╝"
 echo ""
 echo ""
-echo "Validating your environment..."
+# Ensure Docker daemon is ready (the MCP server runs in Docker)
+echo "🔧 Waiting for Docker..."
+until docker info >/dev/null 2>&1; do
+    sleep 1
+done
+echo "✅ Docker daemon ready"
+echo ""
 
-SECRET_SET=false
-
-# Check if GCORE_API_TOKEN is set
-if [ -z "$GCORE_API_TOKEN" ]; then
-    echo "⚠️  GCORE_API_TOKEN not found. Setting up secret..."
-    echo ""
-
-    # Trigger the VS Code command
-    echo "fastedge.setup-codespace-secret" > .vscode/.fastedge-run-command
-
-    # Wait for the secret to be created (poll for up to 2 minutes)
-    echo "Waiting for secret configuration to complete..."
-    TIMEOUT=120
-    ELAPSED=0
-    SECRET_SET=false
-
-    while [ $ELAPSED -lt $TIMEOUT ]; do
-        # Check if secret exists using gh CLI
-        if gh secret list --app codespaces --user --json name 2>/dev/null | grep -q "GCORE_API_TOKEN"; then
-            SECRET_SET=true
-            break
-        fi
-        sleep 2
-        ELAPSED=$((ELAPSED + 2))
-        echo -n "."
-    done
-
-    echo ""
-
-    if [ "$SECRET_SET" = true ]; then
-        echo "✅ Secret configured successfully!"
-        echo ""
-        echo "⚠️  Note: You'll need to REBUILD the codespace for the secret to be available."
-        echo "    The secret is now saved but not yet loaded into this environment."
-        echo ""
-    else
-        echo "⏱️  Secret setup is taking longer than expected or was cancelled."
-        echo ""
-        echo "You can set it up later by:"
-        echo "1. Running: Command Palette > FastEdge (Setup Codespace Secret)"
-        echo "2. Or manually via GitHub repository Settings > Secrets > Codespaces"
-        echo ""
-    fi
-fi
-
-# Initialize MCP Server only if GCORE_API_TOKEN is set
-if [ -n "$GCORE_API_TOKEN" ]; then
-    # Ensure Docker daemon is ready for MCP server
-    echo ""
-    echo "🔧 Initializing FastEdge MCP Server..."
-    # Wait for Docker daemon to be ready (the MCP server uses Docker)
-    until docker info >/dev/null 2>&1; do
-        echo "Waiting for Docker daemon to be ready..."
-        sleep 1
-    done
-    echo "✅ Docker daemon ready"
-    echo ""
-
-    # Trigger VS Code to reload the window to ensure MCP servers restart
-    # This ensures that if Copilot Chat was already open, it reconnects to MCP servers
-    echo "🔄 Reloading VS Code window to initialize MCP servers..."
-    # echo "workbench.action.reloadWindow" > .vscode/.fastedge-run-command
-    sleep 2
-else
-    echo ""
-    if [ "$SECRET_SET" = true ]; then
-        echo "ℹ️  MCP server will be available after you rebuild the codespace"
-        echo "   (The secret is saved but not yet loaded into this session)"
-    else
-        echo "⚠️  Skipping MCP server initialization (GCORE_API_TOKEN not configured)"
-    fi
-    echo ""
-fi
-
+# Sign-in uses an ephemeral session: no API key is stored in this codespace.
+# The token lives only in the running MCP server's memory, so every MCP server
+# start needs a fresh approval in the Gcore portal.
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🔐 Signing in to Gcore"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "The FastEdge MCP server signs in through the Gcore portal - no API key needed."
+echo "When Copilot needs your account it will give you a portal link and a"
+echo "'login --code' command:"
+echo ""
+echo "1. Open the link in your browser, choose the manual option and approve."
+echo "2. Run the command in this terminal and paste the connect code at its prompt."
+echo ""
+echo "Never paste the connect code into the chat - it is your access token."
+echo "Each time the MCP server restarts you will need to approve again."
+echo ""
 
 echo "🎉 Your FastEdge codespace is ready."
 echo ""
