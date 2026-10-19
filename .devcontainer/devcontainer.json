@@ -1,63 +1,16 @@
 {
   "name": "FastEdge Application Dev Environment",
-  // Build from custom Dockerfile with Rust, Node, Clang, and WASI SDK
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
+  // Prebuilt image with Rust, Node, WASI SDK, the FastEdge CLIs, Claude Code, Codex
+  // and VS Code extensions. Built from .github/codespace-image/.
+  "image": "ghcr.io/g-core/fastedge-codespace:1",
 
-  // Features are installed during prebuild (once)
-  // Users get instant startup because prebuild has features cached
-  "features": {
-    // "ghcr.io/devcontainers/features/node:1": {
-    //   "version": "24",
-    //   "installYarnUsingApt": false
-    // },
-    // "ghcr.io/devcontainers/features/rust:1": {
-    //   "version": "latest",
-    //   "profile": "minimal",
-    //   "targets": "wasm32-wasip1"
-    // },
-    "ghcr.io/devcontainers/features/github-cli:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "version": "latest",
-      "moby": false
-    }
+  // Read by the FastEdge MCP server in VS Code, Claude Code and Codex
+  "containerEnv": {
+    "FASTEDGE_SESSION": "ephemeral"
   },
 
   "onCreateCommand": "bash .devcontainer/setup.sh",
   "postAttachCommand": "bash .devcontainer/start.sh",
 
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "rust-lang.rust-analyzer",
-        "tamasfe.even-better-toml",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
-        // "g-corelabssa.fastedge"
-      ],
-      "settings": {
-        // "chat.editor.location": "sidebar",
-        // "workbench.sideBar.location": "left",
-        "rust-analyzer.checkOnSave.command": "clippy",
-        "rust-analyzer.cargo.target": "wasm32-wasip1",
-        "editor.formatOnSave": true,
-        "mcp.servers": {
-          // "fastedge": {
-          //   "command": "npx",
-          //   "args": ["@your-company/fastedge-mcp"]
-          // }
-        },
-        "workbench.editorAssociations": {
-          "*.md": "vscode.markdown.preview.editor"
-        }
-      }
-    }
-  },
-
-  "remoteUser": "vscode",
   "forwardPorts": [8181]
 }

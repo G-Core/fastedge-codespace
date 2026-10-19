@@ -1,0 +1,42 @@
+{
+  // Source for the published image ghcr.io/g-core/fastedge-codespace.
+  // Features and customizations are baked into the image metadata, so the
+  // codespace config (.devcontainer/devcontainer.json) only references the image.
+  "name": "FastEdge Application Dev Environment",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": false
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "g-corelabssa.fastedge"
+      ],
+      "settings": {
+        "rust-analyzer.checkOnSave.command": "clippy",
+        "rust-analyzer.cargo.target": "wasm32-wasip1",
+        "editor.formatOnSave": true,
+        "workbench.editorAssociations": {
+          "*.md": "vscode.markdown.preview.editor"
+        }
+      }
+    }
+  },
+
+  "remoteUser": "vscode"
+}

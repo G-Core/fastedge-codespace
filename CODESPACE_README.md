@@ -12,7 +12,7 @@ There is also an MCP Server attached [fastedge-assistant](https://github.com/G-C
 
 ## Signing in
 
-The MCP server doesn't need an API key. When it first needs your Gcore account, Copilot gives you a portal link and a `login --code` command. Open the link in your browser, choose the manual option and approve, then run the command in the terminal and paste the connect code at its prompt.
+The MCP server doesn't need an API key. When it first needs your Gcore account, your AI agent (Claude Code, Codex or Copilot) asks you to open a new terminal and run `fastedge-login`. It shows a portal link: open it in your browser, approve, then paste the connect code at the prompt.
 
 - Never paste the connect code into the chat: it is your access token.
 - The session lasts at most 8 hours and is kept only in the running MCP server's memory. Nothing usable is saved in this codespace, so you approve again each time the MCP server restarts.
