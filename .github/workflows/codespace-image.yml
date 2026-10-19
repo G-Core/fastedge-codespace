@@ -1,0 +1,44 @@
+name: Codespace image
+
+# Builds ghcr.io/<owner>/fastedge-codespace. The weekly run picks up new
+# releases of the FastEdge CLIs, Claude Code, Codex and the plugin.
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/codespace-image/**"
+      - ".github/workflows/codespace-image.yml"
+  schedule:
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    # Repos created from this template also get this workflow; only publish
+    # where the repo variable PUBLISH_CODESPACE_IMAGE is set to true
+    if: vars.PUBLISH_CODESPACE_IMAGE == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image name
+        id: image
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/fastedge-codespace" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: devcontainers/ci@v0.3
+        with:
+          configFile: .github/codespace-image/devcontainer.json
+          imageName: ${{ steps.image.outputs.name }}
+          imageTag: 1,1-${{ github.run_number }}
+          push: always

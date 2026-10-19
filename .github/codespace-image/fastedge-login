@@ -1,0 +1,56 @@
+#!/bin/bash
+# Signs the FastEdge MCP server in to Gcore without copying a long command.
+#   fastedge-login --save <key> <api-origin> <tag>   the AI agent saves what the server gave it
+#   fastedge-login                                   you run this in a terminal and paste the connect code
+# Only a validated key, an allowlisted origin and an image tag are saved, never a command, so this
+# can only ever run the same login --code command the MCP server would show.
+set -euo pipefail
+
+KEY_FILE=/tmp/fastedge-login/request
+KEY_DIR="$(dirname "$KEY_FILE")"
+
+valid_key() { [[ "$1" =~ ^[A-Za-z0-9_-]{43}$ ]]; }
+valid_tag() { [[ "$1" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$ ]]; }
+# The MCP server's allowlist: API origin -> portal origin
+portal_for() {
+  case "$1" in
+    https://api.gcore.com) echo https://portal.gcore.com ;;
+    https://api.preprod.world) echo https://portal.preprod.world ;;
+    https://api.cdb-staging.cdn.orange.com) echo https://portal.cdb-staging.cdn.orange.com ;;
+    https://api.controlcenter.internationalcarriers.orange.com) echo https://portal.controlcenter.internationalcarriers.orange.com ;;
+    *) return 1 ;;
+  esac
+}
+# /tmp is shared: only trust a real directory that we own and nobody else can write to
+safe_dir() {
+  [ -d "$KEY_DIR" ] && [ ! -L "$KEY_DIR" ] && [ -O "$KEY_DIR" ] && [ "$(stat -c %a "$KEY_DIR")" = 700 ] ||
+    { echo "fastedge-login: $KEY_DIR is not a private directory owned by you; remove it and try again" >&2; exit 2; }
+}
+
+if [ "${1:-}" = "--save" ]; then
+  valid_key "${2:-}" && portal_for "${3:-}" >/dev/null && valid_tag "${4:-}" ||
+    { echo "fastedge-login: usage: fastedge-login --save <key> <api-origin> <tag>, as the MCP server gives them" >&2; exit 2; }
+  mkdir -m 700 "$KEY_DIR" 2>/dev/null || true
+  safe_dir
+  printf '%s\n%s\n%s\n' "$2" "$3" "$4" > "$KEY_FILE"
+  echo "Saved. Ask the user to open a new terminal and run: fastedge-login"
+  exit 0
+fi
+
+[ -t 0 ] || { echo "fastedge-login: run this yourself in a terminal; it asks for the connect code" >&2; exit 2; }
+[ ! -e "$KEY_DIR" ] || safe_dir
+{ read -r key; read -r origin; read -r tag; } < "$KEY_FILE" 2>/dev/null || true
+if ! valid_key "${key:-}" || ! portal="$(portal_for "${origin:-}")" || ! valid_tag "${tag:-}"; then
+  echo "No sign-in request yet. Ask your AI agent to do something with your Gcore account first." >&2
+  exit 1
+fi
+
+echo "1. Open $portal/fastedge/agent-connect?ephemeral=1 in your browser and approve."
+echo "   Check the page shows the Gcore account you want first."
+echo "2. Copy the connect code the page shows and paste it at the prompt below."
+echo "   Never paste it into the chat."
+echo ""
+
+# The key belongs to one MCP server start; drop it once used so a stale one isn't reused
+docker run --rm -it -v fastedge-session:/run/fastedge -e "GCORE_API_BASE=$origin" -e FASTEDGE_SESSION=ephemeral \
+  "ghcr.io/g-core/fastedge-mcp-server:$tag" login --code --seal-to "$key" && rm -f "$KEY_FILE"
