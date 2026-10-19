@@ -15,8 +15,6 @@
         "WORKSPACE_ROOT=/workspace",
         "-e",
         "FASTEDGE_SESSION=ephemeral",
-        "-e",
-        "GCORE_API_BASE=https://api.preprod.world",
         "ghcr.io/g-core/fastedge-mcp-server:latest"
       ]
     }

@@ -6,8 +6,7 @@
 
   // Read by the FastEdge MCP server in VS Code, Claude Code and Codex
   "containerEnv": {
-    "FASTEDGE_SESSION": "ephemeral",
-    "GCORE_API_BASE": "https://api.preprod.world"
+    "FASTEDGE_SESSION": "ephemeral"
   },
 
   "onCreateCommand": "bash .devcontainer/setup.sh",
